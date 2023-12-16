@@ -1,6 +1,6 @@
 import cv2
 import os
-from config import *
+from utils.config import *
 
 
 def clear_data():
@@ -11,7 +11,7 @@ def clear_data():
 
     # Recreate empty directories for each label
     os.makedirs(DATA_DIR)
-    for label in LABELS_DICT.values():
+    for label in LABELS:
         label_dir = os.path.join(DATA_DIR, label)
         os.makedirs(label_dir)
     print("Data directory cleared.")
@@ -27,15 +27,20 @@ def display_message(image, message):
     cv2.putText(image, message, text_position, font, font_scale, (255, 255, 0), font_thickness, cv2.LINE_AA)
 
 
+def close_webcam(cap, message=''):
+    cap.release()
+    cv2.destroyAllWindows()
+    print(message)
+
+
 def capture_images():
-    """ Captures images for each label. """
     # Open webcam
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     if not cap.isOpened():
         print("Error: Unable to open webcam.")
         return
 
-    for label in LABELS_DICT.values():
+    for label in LABELS:
         # Wait for the user to press the spacebar to start capturing images
         message = f"Label '{label}'. Spacebar to start."
         while True:
@@ -43,8 +48,14 @@ def capture_images():
             display_message(frame, message)
             cv2.imshow('Webcam', frame)
             key = cv2.waitKey(1) & 0xFF
+
+            # Space to start recording
             if key == ord(' '):
                 break
+            # Exit on escape or window close
+            elif key == 27 or cv2.getWindowProperty('Webcam', cv2.WND_PROP_VISIBLE) < 1:
+                close_webcam(cap, "Image capture aborted.")
+                return
 
         # Save images to data directory
         print(f"Capturing images for label '{label}'...")
@@ -55,10 +66,14 @@ def capture_images():
             cv2.imwrite(img_filename, frame)
             cv2.waitKey(50)
 
+            key = cv2.waitKey(1) & 0xFF
+            # Exit on escape or window close
+            if key == 27 or cv2.getWindowProperty('Webcam', cv2.WND_PROP_VISIBLE) < 1:
+                close_webcam(cap, "Image capture aborted.")
+                return
+
     # Close the camera
-    cap.release()
-    cv2.destroyAllWindows()
-    print("Image capture complete.")
+    close_webcam(cap, "Image capture complete.")
 
 
 if __name__ == "__main__":
