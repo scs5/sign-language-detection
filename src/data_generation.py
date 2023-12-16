@@ -1,21 +1,17 @@
 import cv2
 import os
-import shutil
-
-LABELS = ['A', 'B', 'C']
-NUM_IMAGES = 100
-DATA_DIR = './data'
+from config import *
 
 
 def clear_data():
     """ Clears any existing data in the data directory. """
     # Remove directory if it exists
     if os.path.exists(DATA_DIR):
-        shutil.rmtree(DATA_DIR)
+        os.system('rmdir /S /Q "{}"'.format(DATA_DIR))
 
     # Recreate empty directories for each label
     os.makedirs(DATA_DIR)
-    for label in LABELS:
+    for label in LABELS_DICT.values():
         label_dir = os.path.join(DATA_DIR, label)
         os.makedirs(label_dir)
     print("Data directory cleared.")
@@ -39,7 +35,7 @@ def capture_images():
         print("Error: Unable to open webcam.")
         return
 
-    for label in LABELS:
+    for label in LABELS_DICT.values():
         # Wait for the user to press the spacebar to start capturing images
         message = f"Label '{label}'. Spacebar to start."
         while True:
