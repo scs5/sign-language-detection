@@ -1,4 +1,4 @@
-LABELS = {'A', 'B', 'I love you'}
+LABELS = {'A', 'B', 'C', 'I love you'}
 NUM_IMAGES = 200
 DATA_DIR = './data'
 DATA_PICKLE_FN = './data.pickle'

@@ -2,7 +2,7 @@ import os
 import pickle
 import mediapipe as mp
 import cv2
-from config import *
+from utils.config import *
 
 
 def extract_features():
