@@ -4,24 +4,34 @@
 </p>
 
 ## Table of Contents
+- [Overview](#overview)
+- [Approach](#approach)
+- [Components](#components)
+- [Technologies Used](#technologies-used)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Acknowledgements](#acknowledgements)
 
 ## Overview
 This project aims to create a real-time sign language detection system using a custom dataset of hand signs. This involves capturing multiple images of different hand signs, extracting hand landmarks for feature representation, and training a classification model to predict the sign. The trained model is then deployed for real-time sign language detection.
 
-## Components
-### Data Collection
-A custom script is developed to record multiple images of the hand signs. This implementation uses the signs for A, B, C, and "I love you", although any number of static hand signs could be used.
+## Approach
+When approaching this problem, I thought of a few ways to solve it:
+1. **Image Classification:** The entire image is used as input and classifies the images by what hand sign is present in them. This could work well, but I also wanted to be able to detect *where* the hand signs were in the image.
+2. **Object Recognition:** The model would identify and locate the hand sign in the image. This is what I wanted, but it would involve manually labeling the hand signs in my training data, which I didn't want to do.
+3. **Hand Landmark Extraction:** After doing a bit of research, I came across [MediaPipe's Hand Landmark Extractions](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker). This is a pretrained network that is able to detect positions of different points on your hand. These landmarks could be used to classify and locate the hand sign in the image, which is why I went with this method. The only downside is that sometimes the hand landmark detection can fail if the fingers are mostly obscured (like when signing a "C").
 
-### Feature Extraction
-Hand landmarks serve as essential features that capture the unique characteristics of each sign. These landmarks are extracted using MediaPipe's hand landmark detection.
-
-### Model Training
-The extracted hand landmarks are used as input features, and the corresponding sign labels (A, B, C, "I love you") as target variables. I use a random forest classifier due to its ease of use, although this could also be tinkered with.
-
-### Real-time Inference
-The trained model is deployed to perform real-time sign language detection. The deployed system can capture live video feed, extract hand landmarks, and classify the detected signs in real-time.
+### Components
+- **📷 Data Collection:** A custom script is developed to record multiple images of the hand signs. This implementation uses the signs for A, B, C, and "I love you", although any number of static hand signs could be used.
+- **🛠️ Feature Extraction:** Hand landmarks serve as essential features that capture the unique characteristics of each sign. These landmarks are extracted using MediaPipe's hand landmark detection.
+- **🧠 Model Training:** The extracted hand landmarks are used as input features, and the corresponding sign labels (A, B, C, "I love you") as target variables. I use a random forest classifier due to its ease of use, although this could also be tinkered with.
+- **⚡ Real-time Inference:** The trained model is deployed to perform real-time sign language detection. The deployed system can capture live video feed, extract hand landmarks, and classify the detected signs in real-time.
 
 ## Technologies Used
+- **OpenCV:** for working with images (e.g. data collection, real-time video capture)
+- **Scikit-learn:** for training, evaluating, and deploying classification model
+- **Other:** Numpy (data handling), pickle (dataset serialization), MediaPipe (hand landmark detection)
 
 ## Project Structure
 - 📂 **examples:** prediction examples
@@ -53,9 +63,6 @@ The trained model is deployed to perform real-time sign language detection. The 
   <img src="./examples/c.PNG" alt="Alt text" width="500"/>
   <img src="./examples/iloveyou.PNG" alt="Alt text" width="500"/>
 </p>
-
-## Challenges
-
 
 ## Acknowledgements
 - [MediaPipe's Hand Landmark Detection](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker)
